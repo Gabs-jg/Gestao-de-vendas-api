@@ -1,0 +1,9 @@
+spring.application.name=gestao-vendas
+server.port=8080
+
+spring.datasource.url = jdbc:mysql://localhost:3307/nome_do_banco?useTimezone=true&serverTimezone=America/Sao_Paulo
+spring.datasource.username = usuario_local
+spring.datasource.password = senha_local
+
+spring.jpa.show-sql = true
+
