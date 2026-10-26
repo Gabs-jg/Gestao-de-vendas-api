@@ -2,6 +2,7 @@ package com.gvendas.gestao_vendas.controllers;
 
 import com.gvendas.gestao_vendas.entities.Category;
 import com.gvendas.gestao_vendas.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,13 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> save(@RequestBody Category category) {
+    public ResponseEntity<Category> save(@Valid @RequestBody Category category) {
         Category obj = categoryService.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(obj);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
+    public ResponseEntity<Category> update(@PathVariable Long id, @Valid @RequestBody Category category) {
         Category categorySave = categoryService.update(id, category);
         return ResponseEntity.ok(categorySave);
     }
