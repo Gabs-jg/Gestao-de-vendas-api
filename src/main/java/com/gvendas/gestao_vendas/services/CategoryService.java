@@ -24,4 +24,8 @@ public class CategoryService {
         // TODO: Tratar Not Found 404
     }
 
+    public Category save(Category category) {
+        return categoryRepository.save(category);
+    }
+
 }
