@@ -38,6 +38,10 @@ public class CategoryService {
         return categoryRepository.save(categorySave);
     }
 
+    public void delete(Long id) {
+        categoryRepository.deleteById(id);
+    }
+
 //    private Category validateCategory(Long id) {
 //        Optional<Category> category = Optional.ofNullable((findById(id)));
 //        return category.orElseThrow(() -> new EmptyResultDataAccessException(1));
