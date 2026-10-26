@@ -1,6 +1,7 @@
 package com.gvendas.gestao_vendas.services;
 
 import com.gvendas.gestao_vendas.entities.Category;
+import com.gvendas.gestao_vendas.exceptions.ResourceNotFoundException;
 import com.gvendas.gestao_vendas.repositories.CategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class CategoryService {
 
     public Category findById(Long id) {
         Optional<Category> obj = categoryRepository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException("teste"));
         // TODO: Tratar Not Found 404
     }
 
@@ -31,15 +32,15 @@ public class CategoryService {
     }
 
     public Category update(Long id, Category category) {
-        Category categorySave = validateCategory(id);
+        Category categorySave = findById(id);
         // copia as propriedades do segundo parâmetro para o primeiro e ignora os campos do terceiro.
         BeanUtils.copyProperties(category, categorySave, "id");
         return categoryRepository.save(categorySave);
     }
 
-    private Category validateCategory(Long id) {
-        Optional<Category> category = Optional.ofNullable((findById(id)));
-        return category.orElseThrow(() -> new EmptyResultDataAccessException(1));
-    }
+//    private Category validateCategory(Long id) {
+//        Optional<Category> category = Optional.ofNullable((findById(id)));
+//        return category.orElseThrow(() -> new EmptyResultDataAccessException(1));
+//    }
 
 }
