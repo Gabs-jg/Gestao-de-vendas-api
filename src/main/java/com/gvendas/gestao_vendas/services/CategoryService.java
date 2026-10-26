@@ -25,7 +25,7 @@ public class CategoryService {
 
     public Category findById(Long id) {
         Optional<Category> obj = categoryRepository.findById(id);
-        return obj.orElseThrow(() -> new ResourceNotFoundException("teste"));
+        return obj.orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         // TODO: Tratar Not Found 404
     }
 
