@@ -42,6 +42,14 @@ public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler
         return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(CategoryDuplicateException.class)
+    public ResponseEntity<Object> handleCategoryDuplicateException(CategoryDuplicateException ex, WebRequest request) {
+        String msgUser = ex.getMessage();
+        String msgDeveloper = ex.getMessage();
+        List<Error> errors = Arrays.asList(new Error(msgUser, msgDeveloper));
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
     private List<Error> generateErrorList(BindingResult bindingResult) {
         List<Error> errors = new ArrayList<>();
 
