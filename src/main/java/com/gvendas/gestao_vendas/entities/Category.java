@@ -17,8 +17,8 @@ public class Category {
     private Long id;
 
     @Column(name = "nome")
-    @NotBlank(message = "Nome")
-    @Length(min = 3, max=50, message = "Nome")
+    @NotBlank(message = "Name")
+    @Length(min = 3, max=50, message = "Name")
     private String name;
 
     public Long getId() {
