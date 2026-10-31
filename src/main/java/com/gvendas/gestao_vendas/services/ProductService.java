@@ -24,4 +24,8 @@ public class ProductService {
         return product.orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
+    public Product save(Product product) {
+        return productRepository.save(product);
+    }
+
 }
