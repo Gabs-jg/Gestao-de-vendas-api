@@ -6,7 +6,6 @@ import com.gvendas.gestao_vendas.exceptions.ResourceNotFoundException;
 import com.gvendas.gestao_vendas.repositories.CategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.gvendas.gestao_vendas.exceptions;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -40,6 +41,14 @@ public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler
         String msgDeveloper = ex.toString();
         List<Error> errors = Arrays.asList(new Error(msgUser, msgDeveloper));
         return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        String msgUser = "Resource not found.";
+        String msgDeveloper = ex.toString();
+        List<Error> errors = Arrays.asList(new Error(msgUser, msgDeveloper));
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(CategoryDuplicateException.class)
