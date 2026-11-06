@@ -1,6 +1,9 @@
 package com.gvendas.gestao_vendas.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -16,20 +19,27 @@ public class Product {
     private Long id;
 
     @Column(name = "descricao")
+    @NotBlank(message = "Description")
+    @Length(min = 3, max=100, message = "Description")
     private String description;
 
     @Column(name = "quantidade")
+    @NotNull(message = "Quantity")
     private Integer quantity;
 
     @Column(name = "preco_custo")
+    @NotNull(message = "Cost price")
     private BigDecimal cost_price;
 
     @Column(name = "preco_venda")
+    @NotNull(message = "Selling price")
     private BigDecimal selling_price;
 
     @Column(name = "observacao")
+    @Length(max=500, message = "Observation")
     private String observation;
 
+    @NotNull(message = "Category")
     @ManyToOne
     @JoinColumn(name = "codigo_categoria", referencedColumnName = "codigo")
     private Category category;

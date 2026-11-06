@@ -2,6 +2,7 @@ package com.gvendas.gestao_vendas.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Objects;
@@ -14,6 +15,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo")
+    @NotNull(message = "Id category")
     private Long id;
 
     @Column(name = "nome")

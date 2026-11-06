@@ -2,6 +2,7 @@ package com.gvendas.gestao_vendas.controllers;
 
 import com.gvendas.gestao_vendas.entities.Product;
 import com.gvendas.gestao_vendas.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
+    public ResponseEntity<Product> save(@Valid @RequestBody Product product) {
         Product obj = productService.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }

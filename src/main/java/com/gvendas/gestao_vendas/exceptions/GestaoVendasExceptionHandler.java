@@ -22,6 +22,7 @@ import java.util.List;
 public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String NOT_BLANK = "NotBlank";
+    private static final String NOT_NULL = "NotNull";
     private static final String LENGTH = "Length";
 
     @Override
@@ -73,6 +74,9 @@ public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler
 
     private String handleErrorMessageForUser(FieldError fieldError) {
         if(fieldError.getCode().equals(NOT_BLANK)) {
+            return fieldError.getDefaultMessage().concat(" is required.");
+        }
+        if(fieldError.getCode().equals(NOT_NULL)) {
             return fieldError.getDefaultMessage().concat(" is required.");
         }
         if(fieldError.getCode().equals(LENGTH)) {
