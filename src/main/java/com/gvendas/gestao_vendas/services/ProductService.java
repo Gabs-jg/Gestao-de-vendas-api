@@ -20,12 +20,12 @@ public class ProductService {
     @Autowired
     private CategoryService categoryService;
 
-    public List<Product> listAll() {
-        return productRepository.findAll();
+    public List<Product> listAll(Long idCategory) {
+        return productRepository.findByCategoryId(idCategory);
     }
 
-    public Product findById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
+    public Product findById(Long id, Long idCategory) {
+        Optional<Product> product = productRepository.findById(id, idCategory);
         return product.orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 

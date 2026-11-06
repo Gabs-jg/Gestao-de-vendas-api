@@ -95,8 +95,8 @@
 
 				<configuration>
 					<url>jdbc:mysql://localhost:3307/gvendas_db</url>
-					<user>gvendas</user>
-					<password>gvendas</password>
+					<user></user>
+					<password></password>
 
 					<locations>
 						<location>filesystem:src/main/resources/db/migration</location>
