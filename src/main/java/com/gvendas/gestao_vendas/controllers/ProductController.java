@@ -18,14 +18,20 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> listAll(@PathVariable Long idCategory) {
-        List<Product> products = productService.listAll(idCategory);
+    public ResponseEntity<List<Product>> listAll() {
+        List<Product> products = productService.listAll();
         return ResponseEntity.ok(products);
     }
 
+//    @GetMapping("/{idCategory}")
+//    public ResponseEntity<List<Product>> listAllByCategory(@PathVariable Long idCategory) {
+//        List<Product> products = productService.listAllByCategory(idCategory);
+//        return ResponseEntity.ok(products);
+//    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long idCategory ,@PathVariable Long id) {
-        Product product = productService.findById(id, idCategory);
+    public ResponseEntity<Product> findById(@PathVariable Long id) {
+        Product product = productService.findById(id);
         return ResponseEntity.ok(product);
     }
 
@@ -33,6 +39,13 @@ public class ProductController {
     public ResponseEntity<Product> save(@Valid @RequestBody Product product) {
         Product obj = productService.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
+    }
+
+    // TODO: Verificar esse método
+    @PutMapping("/{idProduct}")
+    public ResponseEntity<Product> update(@PathVariable Long idCategory, @PathVariable Long idProduct, @Valid @RequestBody Product product) {
+        Product obj = productService.update(idCategory, idProduct, product);
+        return ResponseEntity.ok(obj);
     }
 
 }

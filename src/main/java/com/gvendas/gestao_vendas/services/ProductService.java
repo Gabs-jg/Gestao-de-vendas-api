@@ -5,10 +5,12 @@ import com.gvendas.gestao_vendas.exceptions.CategoryNotFoundException;
 import com.gvendas.gestao_vendas.exceptions.ProductDuplicateException;
 import com.gvendas.gestao_vendas.exceptions.ResourceNotFoundException;
 import com.gvendas.gestao_vendas.repositories.ProductRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -20,12 +22,17 @@ public class ProductService {
     @Autowired
     private CategoryService categoryService;
 
-    public List<Product> listAll(Long idCategory) {
+    public List<Product> listAll() {
+        return productRepository.findAll();
+    }
+
+    // TODO: Terminar método que busca todos os produtos de uma categoria, adicionar no endpoint de categoria
+    public List<Product> listAllByCategory(Long idCategory) {
         return productRepository.findByCategoryId(idCategory);
     }
 
-    public Product findById(Long id, Long idCategory) {
-        Optional<Product> product = productRepository.findById(id, idCategory);
+    public Product findById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
         return product.orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
@@ -33,6 +40,14 @@ public class ProductService {
         validatesIfProductCategoryExists(product.getCategory().getId());
         validateDuplicateProduct(product);
         return productRepository.save(product);
+    }
+
+    public Product update(Long idCategory, Long idProduct, Product product) {
+        Product productSave = findById(idProduct);
+        validateDuplicateProduct(product);
+        validatesIfProductCategoryExists(idCategory);
+        BeanUtils.copyProperties(product, productSave, "id");
+        return productRepository.save(productSave);
     }
 
 
@@ -48,7 +63,8 @@ public class ProductService {
     }
 
     private void validateDuplicateProduct(Product product) {
-        if(productRepository.findByCategoryIdAndDescription(product.getCategory().getId(), product.getDescription()).isPresent()) {
+        Optional<Product> productByDescription = productRepository.findByCategoryIdAndDescription(product.getCategory().getId(), product.getDescription())
+        if(productByDescription.isPresent() && !Objects.equals(productByDescription.get().getId(), product.getId())) {
             throw new ProductDuplicateException(String.format("O produto %s já está cadastrado", product.getDescription()));
         }
     }
