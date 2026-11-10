@@ -50,6 +50,11 @@ public class ProductService {
         return productRepository.save(productSave);
     }
 
+    public void delete(Long idProduct) {
+        Product obj = findById(idProduct);
+        productRepository.delete(obj);
+    }
+
 
     // TODO: Arrumar esse método
     private void validatesIfProductCategoryExists(Long idCategory) {
@@ -63,7 +68,7 @@ public class ProductService {
     }
 
     private void validateDuplicateProduct(Product product) {
-        Optional<Product> productByDescription = productRepository.findByCategoryIdAndDescription(product.getCategory().getId(), product.getDescription())
+        Optional<Product> productByDescription = productRepository.findByCategoryIdAndDescription(product.getCategory().getId(), product.getDescription());
         if(productByDescription.isPresent() && !Objects.equals(productByDescription.get().getId(), product.getId())) {
             throw new ProductDuplicateException(String.format("O produto %s já está cadastrado", product.getDescription()));
         }
