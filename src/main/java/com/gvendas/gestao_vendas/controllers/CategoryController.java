@@ -1,5 +1,7 @@
 package com.gvendas.gestao_vendas.controllers;
 
+import com.gvendas.gestao_vendas.dto.category.CategoryRequestDTO;
+import com.gvendas.gestao_vendas.dto.category.CategoryResponseDTO;
 import com.gvendas.gestao_vendas.entities.Category;
 import com.gvendas.gestao_vendas.services.CategoryService;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categories")
@@ -18,27 +21,34 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> listAll() {
-        List<Category> list = categoryService.listAll();
+    public ResponseEntity<List<CategoryResponseDTO>> listAll() {
+        List<CategoryResponseDTO> list = categoryService.listAll()
+                .stream()
+                .map(category -> CategoryResponseDTO.convertToCategoryDTO(category))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id) {
         Category obj = categoryService.findById(id);
-        return ResponseEntity.ok(obj);
+        CategoryResponseDTO category = CategoryResponseDTO.convertToCategoryDTO(obj);
+        return ResponseEntity.ok(category);
     }
 
+    // TODO: Resolver status code 404 quando tenta cadastrar uma categoria existente
     @PostMapping
-    public ResponseEntity<Category> save(@Valid @RequestBody Category category) {
-        Category obj = categoryService.save(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(obj);
+    public ResponseEntity<CategoryResponseDTO> save(@Valid @RequestBody CategoryRequestDTO categoryDto) {
+        Category obj = categoryService.save(categoryDto.convertToEntity());
+        CategoryResponseDTO category = CategoryResponseDTO.convertToCategoryDTO(obj);
+        return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @Valid @RequestBody Category category) {
-        Category categorySave = categoryService.update(id, category);
-        return ResponseEntity.ok(categorySave);
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryDto) {
+        Category categorySave = categoryService.update(id, categoryDto.convertToEntity(id));
+        CategoryResponseDTO objDto = CategoryResponseDTO.convertToCategoryDTO(categorySave);
+        return ResponseEntity.ok(objDto);
     }
 
     @DeleteMapping("/{id}")

@@ -15,13 +15,25 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo")
-    @NotNull(message = "Id category")
     private Long id;
 
     @Column(name = "nome")
-    @NotBlank(message = "Name")
-    @Length(min = 3, max=50, message = "Name")
     private String name;
+
+    public Category() {}
+
+    public Category(String name) {
+        this.name = name;
+    }
+
+    public Category(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Category(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

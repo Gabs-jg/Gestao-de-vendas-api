@@ -1,5 +1,7 @@
 package com.gvendas.gestao_vendas.controllers;
 
+import com.gvendas.gestao_vendas.dto.product.ProductRequestDTO;
+import com.gvendas.gestao_vendas.dto.product.ProductResponseDTO;
 import com.gvendas.gestao_vendas.entities.Product;
 import com.gvendas.gestao_vendas.services.ProductService;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -18,8 +21,11 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> listAll() {
-        List<Product> products = productService.listAll();
+    public ResponseEntity<List<ProductResponseDTO>> listAll() {
+        List<ProductResponseDTO> products = productService.listAll()
+                .stream()
+                .map(product -> ProductResponseDTO.convertToProductDto(product))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 
@@ -30,22 +36,26 @@ public class ProductController {
 //    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDTO> findById(@PathVariable Long id) {
         Product product = productService.findById(id);
-        return ResponseEntity.ok(product);
+        ProductResponseDTO productDto = ProductResponseDTO.convertToProductDto(product);
+        return ResponseEntity.ok(productDto);
     }
 
+    // TODO: Verificar
     @PostMapping
-    public ResponseEntity<Product> save(@Valid @RequestBody Product product) {
-        Product obj = productService.save(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+    public ResponseEntity<Product> save(@Valid @RequestBody ProductRequestDTO product) {
+        Product obj = productService.save(product.convertToEntity(1L)); // Número long provisório
+        ProductResponseDTO productDto = ProductResponseDTO.convertToProductDto(obj);
+        return ResponseEntity.status(HttpStatus.CREATED).body(obj);
     }
 
     // TODO: Verificar esse método
     @PutMapping("/{idProduct}")
-    public ResponseEntity<Product> update(@PathVariable Long idCategory, @PathVariable Long idProduct, @Valid @RequestBody Product product) {
-        Product obj = productService.update(idCategory, idProduct, product);
-        return ResponseEntity.ok(obj);
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long idCategory, @PathVariable Long idProduct, @Valid @RequestBody ProductRequestDTO product) {
+        Product obj = productService.update(idCategory, idProduct, product.convertToEntity(idCategory, idProduct));
+        ProductResponseDTO productDto = ProductResponseDTO.convertToProductDto(obj);
+        return ResponseEntity.ok(productDto);
     }
 
     @DeleteMapping("/{idProduct}")

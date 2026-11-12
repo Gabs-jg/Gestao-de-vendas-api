@@ -19,30 +19,45 @@ public class Product {
     private Long id;
 
     @Column(name = "descricao")
-    @NotBlank(message = "Description")
-    @Length(min = 3, max=100, message = "Description")
     private String description;
 
     @Column(name = "quantidade")
-    @NotNull(message = "Quantity")
     private Integer quantity;
 
     @Column(name = "preco_custo")
-    @NotNull(message = "Cost price")
     private BigDecimal cost_price;
 
     @Column(name = "preco_venda")
-    @NotNull(message = "Selling price")
     private BigDecimal selling_price;
 
     @Column(name = "observacao")
-    @Length(max=500, message = "Observation")
     private String observation;
 
-    @NotNull(message = "Category")
+    //@NotNull(message = "Category")
     @ManyToOne
     @JoinColumn(name = "codigo_categoria", referencedColumnName = "codigo")
     private Category category;
+
+    public Product(){}
+
+    public Product(Long id, String description, Integer quantity, BigDecimal cost_price, BigDecimal selling_price, String observation, Category category) {
+        this.id = id;
+        this.description = description;
+        this.quantity = quantity;
+        this.cost_price = cost_price;
+        this.selling_price = selling_price;
+        this.observation = observation;
+        this.category = category;
+    }
+
+    public Product(String description, Integer quantity, BigDecimal cost_price, BigDecimal selling_price, String observation, Category category) {
+        this.description = description;
+        this.quantity = quantity;
+        this.cost_price = cost_price;
+        this.selling_price = selling_price;
+        this.observation = observation;
+        this.category = category;
+    }
 
     public Long getId() {
         return id;
