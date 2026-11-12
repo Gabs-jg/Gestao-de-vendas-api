@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_cliente")
-public class Client {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,8 +67,8 @@ public class Client {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Client client)) return false;
-        return Objects.equals(id, client.id) && Objects.equals(name, client.name) && Objects.equals(telephone, client.telephone) && Objects.equals(active, client.active) && Objects.equals(address, client.address);
+        if (!(o instanceof Customer customer)) return false;
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(telephone, customer.telephone) && Objects.equals(active, customer.active) && Objects.equals(address, customer.address);
     }
 
     @Override
