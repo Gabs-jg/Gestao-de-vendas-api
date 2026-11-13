@@ -43,4 +43,11 @@ public class CustomerController {
         CustomerResponseDTO customer = CustomerResponseDTO.convertToCustomerDTO(obj);
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CustomerRequestDTO customerDto) {
+        Customer obj = customerService.update(id, customerDto.convertToEntity(id));
+        CustomerResponseDTO customer = CustomerResponseDTO.convertToCustomerDTO(obj);
+        return ResponseEntity.ok(customer);
+    }
 }

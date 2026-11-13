@@ -34,6 +34,14 @@ public class Customer {
         this.address = address;
     }
 
+    public Customer(Long id, String name, String telephone, Boolean active, Address address) {
+        this.id = id;
+        this.name = name;
+        this.telephone = telephone;
+        this.active = active;
+        this.address = address;
+    }
+
     public Long getId() {
         return id;
     }

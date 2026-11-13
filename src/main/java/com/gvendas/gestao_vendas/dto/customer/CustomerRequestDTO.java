@@ -38,6 +38,17 @@ public class CustomerRequestDTO {
         return new Customer(name, telephone, active, addressData);
     }
 
+    public Customer convertToEntity(Long id) {
+        Address addressData = new Address(address.getPublicPlace(),
+                address.getNumber(),
+                address.getComplement(),
+                address.getNeighborhood(),
+                address.getPostalCode(),
+                address.getCity(),
+                address.getState());
+        return new Customer(id, name, telephone, active, addressData);
+    }
+
     public String getName() {
         return name;
     }

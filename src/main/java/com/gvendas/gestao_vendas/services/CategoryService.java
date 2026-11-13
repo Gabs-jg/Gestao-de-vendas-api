@@ -53,6 +53,7 @@ public class CategoryService {
         }
     }
 
+    // TODO: Lançar a exceção nesse método ou no findById?
 //    private Category validateCategory(Long id) {
 //        Optional<Category> category = Optional.ofNullable((findById(id)));
 //        return category.orElseThrow(() -> new EmptyResultDataAccessException(1));
