@@ -24,6 +24,7 @@ public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler
     private static final String NOT_BLANK = "NotBlank";
     private static final String NOT_NULL = "NotNull";
     private static final String LENGTH = "Length";
+    private static final String PATTERN = "Pattern";
 
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -83,6 +84,9 @@ public class GestaoVendasExceptionHandler extends ResponseEntityExceptionHandler
             assert fieldError.getArguments() != null;
             assert fieldError.getDefaultMessage() != null;
             return fieldError.getDefaultMessage().concat(String.format(" must be between %s and %s characters", fieldError.getArguments()[2], fieldError.getArguments()[1]));
+        }
+        if(fieldError.getCode().equals(PATTERN)) {
+            return fieldError.getDefaultMessage().concat(" invalid format.");
         }
         return fieldError.toString();
     }
