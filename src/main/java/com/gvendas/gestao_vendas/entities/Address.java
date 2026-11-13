@@ -30,6 +30,18 @@ public class Address {
     @Column(name = "estado")
     private String state;
 
+    public Address() {}
+
+    public Address(String publicPlace, Integer number, String complement, String neighborhood, String postalCode, String city, String state) {
+        this.publicPlace = publicPlace;
+        this.number = number;
+        this.complement = complement;
+        this.neighborhood = neighborhood;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.state = state;
+    }
+
     public String getPublicPlace() {
         return publicPlace;
     }

@@ -25,6 +25,15 @@ public class Customer {
     @Embedded
     private Address address;
 
+    public Customer() {}
+
+    public Customer(String name, String telephone, Boolean active, Address address) {
+        this.name = name;
+        this.telephone = telephone;
+        this.active = active;
+        this.address = address;
+    }
+
     public Long getId() {
         return id;
     }
