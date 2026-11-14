@@ -1,8 +1,8 @@
 package com.gvendas.gestao_vendas.exceptions;
 
-public class CategoryNotFoundException extends RuntimeException {
+public class SaleNotFoundException extends RuntimeException {
 
-    public CategoryNotFoundException(String message) {
+    public SaleNotFoundException(String message) {
         super(message);
     }
 

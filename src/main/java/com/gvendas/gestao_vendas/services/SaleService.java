@@ -1,4 +1,67 @@
 package com.gvendas.gestao_vendas.services;
 
+import com.gvendas.gestao_vendas.dto.sale.CustomerSaleResponseDTO;
+import com.gvendas.gestao_vendas.dto.sale.ItemSaleResponseDTO;
+import com.gvendas.gestao_vendas.dto.sale.SaleResponseDTO;
+import com.gvendas.gestao_vendas.entities.Customer;
+import com.gvendas.gestao_vendas.entities.ItemSale;
+import com.gvendas.gestao_vendas.entities.Sale;
+import com.gvendas.gestao_vendas.exceptions.SaleNotFoundException;
+import com.gvendas.gestao_vendas.repositories.ItemSaleRepository;
+import com.gvendas.gestao_vendas.repositories.SaleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
 public class SaleService {
+
+    private final SaleRepository saleRepository;
+    private final ItemSaleRepository itemSaleRepository;
+    private final CustomerService customerService;
+
+    @Autowired
+    public SaleService(SaleRepository saleRepository, ItemSaleRepository itemSaleRepository,CustomerService customerService) {
+        this.saleRepository = saleRepository;
+        this.customerService = customerService;
+        this.itemSaleRepository = itemSaleRepository;
+    }
+
+    public CustomerSaleResponseDTO listSaleByCustomer(Long idCustomer) {
+        Customer customer = validateCustomerSaleExists(idCustomer);
+        List<SaleResponseDTO> saleResponseDTOList = saleRepository.findByCustomerId(idCustomer).stream()
+                .map(this::createSaleResponseDTO).toList();
+        return new CustomerSaleResponseDTO(customer.getName(), saleResponseDTOList);
+    }
+
+    public CustomerSaleResponseDTO listSaleById(Long idSale) {
+        Sale saleExists = validateSaleExists(idSale);
+        return new CustomerSaleResponseDTO(saleExists.getCustomer().getName(), List.of(createSaleResponseDTO(saleExists)));
+    }
+
+    private Sale validateSaleExists(Long idSale) {
+        Optional<Sale> sale = saleRepository.findById(idSale);
+        return sale.orElseThrow(() -> new SaleNotFoundException(String.format("Sale with code %s not found", idSale)));
+    }
+
+    private Customer validateCustomerSaleExists(Long idCustomer) {
+        return customerService.findById(idCustomer);
+    }
+
+    private SaleResponseDTO createSaleResponseDTO(Sale sale) {
+        List<ItemSaleResponseDTO> itemsSaleResponseDTO = itemSaleRepository.findBySaleId(sale.getId())
+                .stream().map(this::createItemsSaleResponseDTO).collect(Collectors.toList());
+
+        return new SaleResponseDTO(sale.getId(), sale.getDate(), itemsSaleResponseDTO);
+    }
+
+    private ItemSaleResponseDTO createItemsSaleResponseDTO(ItemSale itemSale) {
+        return new ItemSaleResponseDTO(itemSale.getId(), itemSale.getQuantity(), itemSale.getSellingPrice(), itemSale.getProduct().getId(), itemSale.getProduct().getDescription());
+    }
+
+
 }
