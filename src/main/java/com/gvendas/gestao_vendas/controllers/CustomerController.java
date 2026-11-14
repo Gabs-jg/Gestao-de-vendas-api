@@ -50,4 +50,10 @@ public class CustomerController {
         CustomerResponseDTO customer = CustomerResponseDTO.convertToCustomerDTO(obj);
         return ResponseEntity.ok(customer);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        customerService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

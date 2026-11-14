@@ -48,4 +48,8 @@ public class CustomerService {
         return customerRepository.save(customerSave);
     }
 
+    public void delete(Long id) {
+        customerRepository.deleteById(id);
+    }
+
 }
