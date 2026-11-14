@@ -41,7 +41,8 @@ public class CategoryService {
         return categoryRepository.save(categorySave);
     }
 
-    // TODO: Conferir por que não lança exceção quando tenta deletar com id inexistente
+    // TODO: Conferir por que não lança exceção quando tenta deletar com id inexistente - 404
+    // Talvez por que não coloquei a exceção aqui..
     public void delete(Long id) {
         categoryRepository.deleteById(id);
     }
