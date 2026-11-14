@@ -22,4 +22,10 @@ public class SaleController {
         return ResponseEntity.ok(customerSaleResponseDTO);
     }
 
+    @GetMapping("/{idSale}")
+    public ResponseEntity<CustomerSaleResponseDTO> listSaleById(@PathVariable Long idSale) {
+        CustomerSaleResponseDTO customerSaleResponseDTO = saleService.listSaleById(idSale);
+        return ResponseEntity.ok(customerSaleResponseDTO);
+    }
+
 }
