@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SaleService {
+public class SaleService extends AbstractSaleService {
 
     private final SaleRepository saleRepository;
     private final ItemSaleRepository itemSaleRepository;
@@ -34,13 +34,15 @@ public class SaleService {
     public CustomerSaleResponseDTO listSaleByCustomer(Long idCustomer) {
         Customer customer = validateCustomerSaleExists(idCustomer);
         List<SaleResponseDTO> saleResponseDTOList = saleRepository.findByCustomerId(idCustomer).stream()
-                .map(this::createSaleResponseDTO).toList();
+                .map(sale -> createSaleResponseDTO(sale, itemSaleRepository.findBySaleId(sale.getId()))).toList();
         return new CustomerSaleResponseDTO(customer.getName(), saleResponseDTOList);
     }
 
+    // TODO: Resolver status code 500 quando não encontra a venda com o id especificado
     public CustomerSaleResponseDTO listSaleById(Long idSale) {
         Sale saleExists = validateSaleExists(idSale);
-        return new CustomerSaleResponseDTO(saleExists.getCustomer().getName(), List.of(createSaleResponseDTO(saleExists)));
+        List<ItemSale> itemSaleList = itemSaleRepository.findBySaleId(saleExists.getId());
+        return new CustomerSaleResponseDTO(saleExists.getCustomer().getName(), List.of(createSaleResponseDTO(saleExists, itemSaleList)));
     }
 
     private Sale validateSaleExists(Long idSale) {
@@ -50,17 +52,6 @@ public class SaleService {
 
     private Customer validateCustomerSaleExists(Long idCustomer) {
         return customerService.findById(idCustomer);
-    }
-
-    private SaleResponseDTO createSaleResponseDTO(Sale sale) {
-        List<ItemSaleResponseDTO> itemsSaleResponseDTO = itemSaleRepository.findBySaleId(sale.getId())
-                .stream().map(this::createItemsSaleResponseDTO).collect(Collectors.toList());
-
-        return new SaleResponseDTO(sale.getId(), sale.getDate(), itemsSaleResponseDTO);
-    }
-
-    private ItemSaleResponseDTO createItemsSaleResponseDTO(ItemSale itemSale) {
-        return new ItemSaleResponseDTO(itemSale.getId(), itemSale.getQuantity(), itemSale.getSellingPrice(), itemSale.getProduct().getId(), itemSale.getProduct().getDescription());
     }
 
 
