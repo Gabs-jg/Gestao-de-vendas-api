@@ -34,6 +34,12 @@ public class SaleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerSaleResponseDTO);
     }
 
+    @PutMapping("/{idSale}/customer/{idCustomer}")
+    public ResponseEntity<CustomerSaleResponseDTO> update(@PathVariable Long idSale, @PathVariable Long idCustomer, @RequestBody SaleRequestDTO saleRequestDTO) {
+        CustomerSaleResponseDTO customerSale = saleService.update(idSale, idCustomer, saleRequestDTO);
+        return ResponseEntity.ok(customerSale);
+    }
+
     @DeleteMapping("/{idSale}")
     public ResponseEntity<Void> delete(@PathVariable Long idSale) {
         saleService.delete(idSale);

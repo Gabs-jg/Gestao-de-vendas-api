@@ -69,8 +69,26 @@ public class SaleService extends AbstractSaleService {
         saleRepository.delete(saleExists);
     }
 
+    public CustomerSaleResponseDTO update(Long idSale, Long idCustomer, SaleRequestDTO saleDto) {
+        validateSaleExists(idSale);
+        Customer customer = validateCustomerSaleExists(idCustomer);
+        List<ItemSale> itemSaleList = itemSaleRepository.findBySaleId(idSale);
+        validateProductExistsAndReturnValueToStock(itemSaleList);
+        validateProductExistsAndUpdateQuantity(saleDto.getItemSaleDTO());
+        itemSaleRepository.deleteAll(itemSaleList);
+        Sale saleUpdated = updateSale(idSale, customer, saleDto);
+        return returnCustomerSaleResponseDTO(saleUpdated, itemSaleRepository.findBySaleId(saleUpdated.getId()));
+    }
+
     private Sale saveSale(Customer customer, SaleRequestDTO saleDTO) {
         Sale saleSave = saleRepository.save(new Sale(saleDTO.getDate(), customer));
+        saleDTO.getItemSaleDTO().stream().map(itemSaleRequestDTO -> createItemSale(itemSaleRequestDTO, saleSave))
+                .forEach(itemSaleRepository::save);
+        return saleSave;
+    }
+
+    private Sale updateSale(Long idSale ,Customer customer, SaleRequestDTO saleDTO) {
+        Sale saleSave = saleRepository.save(new Sale(idSale ,saleDTO.getDate(), customer));
         saleDTO.getItemSaleDTO().stream().map(itemSaleRequestDTO -> createItemSale(itemSaleRequestDTO, saleSave))
                 .forEach(itemSaleRepository::save);
         return saleSave;

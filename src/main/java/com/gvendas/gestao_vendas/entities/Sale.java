@@ -29,6 +29,12 @@ public class Sale {
         this.customer = customer;
     }
 
+    public Sale(Long id ,LocalDate date, Customer customer) {
+        this.id = id;
+        this.date = date;
+        this.customer = customer;
+    }
+
     public Long getId() {
         return id;
     }
