@@ -3,6 +3,7 @@ package com.gvendas.gestao_vendas.controllers;
 import com.gvendas.gestao_vendas.dto.sale.CustomerSaleResponseDTO;
 import com.gvendas.gestao_vendas.dto.sale.SaleRequestDTO;
 import com.gvendas.gestao_vendas.services.SaleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class SaleController {
     }
 
     @PostMapping("/customer/{idCustomer}")
-    public ResponseEntity<CustomerSaleResponseDTO> save(@PathVariable Long idCustomer, @RequestBody SaleRequestDTO saleDto) {
+    public ResponseEntity<CustomerSaleResponseDTO> save(@PathVariable Long idCustomer, @Valid @RequestBody SaleRequestDTO saleDto) {
         CustomerSaleResponseDTO customerSaleResponseDTO = saleService.save(idCustomer, saleDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerSaleResponseDTO);
     }
