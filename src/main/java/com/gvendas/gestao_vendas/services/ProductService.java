@@ -68,7 +68,7 @@ public class ProductService {
         }
     }
 
-    protected void updateQuantityAfterSale(Product product) {
+    protected void updateQuantityInStock(Product product) {
         productRepository.save(product);
     }
 

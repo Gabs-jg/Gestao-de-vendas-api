@@ -34,4 +34,10 @@ public class SaleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerSaleResponseDTO);
     }
 
+    @DeleteMapping("/{idSale}")
+    public ResponseEntity<Void> delete(@PathVariable Long idSale) {
+        saleService.delete(idSale);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -60,11 +60,28 @@ public class SaleService extends AbstractSaleService {
         return returnCustomerSaleResponseDTO(saleSave, itemSaleList);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
+    public void delete(Long idSale) {
+        Sale saleExists = validateSaleExists(idSale);
+        List<ItemSale> itemsSale = itemSaleRepository.findBySaleId(idSale);
+        validateProductExistsAndReturnValueToStock(itemsSale);
+        itemSaleRepository.deleteAll(itemsSale);
+        saleRepository.delete(saleExists);
+    }
+
     private Sale saveSale(Customer customer, SaleRequestDTO saleDTO) {
         Sale saleSave = saleRepository.save(new Sale(saleDTO.getDate(), customer));
         saleDTO.getItemSaleDTO().stream().map(itemSaleRequestDTO -> createItemSale(itemSaleRequestDTO, saleSave))
                 .forEach(itemSaleRepository::save);
         return saleSave;
+    }
+
+    private void validateProductExistsAndReturnValueToStock(List<ItemSale> itemSales) {
+        itemSales.forEach(item -> {
+            Product product = productService.validatesIfProductExists(item.getProduct().getId());
+            product.setQuantity(product.getQuantity() + item.getQuantity());
+            productService.updateQuantityInStock(product);
+        });
     }
 
     // TODO: Erro 500 se informar id de produto inexistente
@@ -74,7 +91,7 @@ public class SaleService extends AbstractSaleService {
             Product product = productService.validatesIfProductExists(item.getIdProduct());
             validateQuantityProduct(product, item.getQuantity());
             product.setQuantity(product.getQuantity() - item.getQuantity());
-            productService.updateQuantityAfterSale(product);
+            productService.updateQuantityInStock(product);
         });
     }
 
