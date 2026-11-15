@@ -44,14 +44,15 @@ public class SaleService extends AbstractSaleService {
     public CustomerSaleResponseDTO listSaleById(Long idSale) {
         Sale saleExists = validateSaleExists(idSale);
         List<ItemSale> itemSaleList = itemSaleRepository.findBySaleId(saleExists.getId());
-        return new CustomerSaleResponseDTO(saleExists.getCustomer().getName(), List.of(createSaleResponseDTO(saleExists, itemSaleList)));
+        return returnCustomerSaleResponseDTO(saleExists, itemSaleList);
     }
 
     public CustomerSaleResponseDTO save(Long idCustomer, SaleRequestDTO saleDto) {
         Customer customer = validateCustomerSaleExists(idCustomer);
         validateProductExists(saleDto.getItemSaleDTO());
         Sale saleSave = saveSale(customer, saleDto);
-        return new CustomerSaleResponseDTO(saleSave.getCustomer().getName(), List.of(createSaleResponseDTO(saleSave, itemSaleRepository.findBySaleId(saleSave.getId()))));
+        List<ItemSale> itemSaleList = itemSaleRepository.findBySaleId(saleSave.getId());
+        return returnCustomerSaleResponseDTO(saleSave, itemSaleList);
     }
 
     private Sale saveSale(Customer customer, SaleRequestDTO saleDTO) {
@@ -73,10 +74,6 @@ public class SaleService extends AbstractSaleService {
 
     private Customer validateCustomerSaleExists(Long idCustomer) {
         return customerService.findById(idCustomer);
-    }
-
-    private ItemSale createItemSale(ItemSaleRequestDTO itemSaleDTO, Sale sale) {
-        return new ItemSale(itemSaleDTO.getQuantity(), itemSaleDTO.getSellingPrice(), new Product(itemSaleDTO.getIdProduct()), sale);
     }
 
 }

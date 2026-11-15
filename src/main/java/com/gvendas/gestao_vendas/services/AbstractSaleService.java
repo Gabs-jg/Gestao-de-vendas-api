@@ -1,8 +1,11 @@
 package com.gvendas.gestao_vendas.services;
 
+import com.gvendas.gestao_vendas.dto.sale.CustomerSaleResponseDTO;
+import com.gvendas.gestao_vendas.dto.sale.ItemSaleRequestDTO;
 import com.gvendas.gestao_vendas.dto.sale.ItemSaleResponseDTO;
 import com.gvendas.gestao_vendas.dto.sale.SaleResponseDTO;
 import com.gvendas.gestao_vendas.entities.ItemSale;
+import com.gvendas.gestao_vendas.entities.Product;
 import com.gvendas.gestao_vendas.entities.Sale;
 
 import java.util.List;
@@ -20,6 +23,15 @@ public abstract class AbstractSaleService {
 
     protected ItemSaleResponseDTO createItemsSaleResponseDTO(ItemSale itemSale) {
         return new ItemSaleResponseDTO(itemSale.getId(), itemSale.getQuantity(), itemSale.getSellingPrice(), itemSale.getProduct().getId(), itemSale.getProduct().getDescription());
+    }
+
+    protected CustomerSaleResponseDTO returnCustomerSaleResponseDTO(Sale sale, List<ItemSale> itemSaleList) {
+        return new CustomerSaleResponseDTO(sale.getCustomer().getName(), List.of(createSaleResponseDTO(sale, itemSaleList)));
+    }
+
+    protected ItemSale createItemSale(ItemSaleRequestDTO itemSaleDTO, Sale sale) {
+        return new ItemSale(itemSaleDTO.getQuantity(), itemSaleDTO.getSellingPrice(),
+                new Product(itemSaleDTO.getIdProduct()), sale);
     }
 
 }
