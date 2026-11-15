@@ -28,6 +28,16 @@ public class ItemSale {
     @JoinColumn(name = "codigo_venda", referencedColumnName = "codigo")
     private Sale sale;
 
+    public ItemSale() {
+    }
+
+    public ItemSale(Integer quantity, BigDecimal sellingPrice, Product product, Sale sale) {
+        this.quantity = quantity;
+        this.sellingPrice = sellingPrice;
+        this.product = product;
+        this.sale = sale;
+    }
+
     public Long getId() {
         return id;
     }

@@ -40,6 +40,10 @@ public class Product {
 
     public Product(){}
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     public Product(Long id, String description, Integer quantity, BigDecimal cost_price, BigDecimal selling_price, String observation, Category category) {
         this.id = id;
         this.description = description;

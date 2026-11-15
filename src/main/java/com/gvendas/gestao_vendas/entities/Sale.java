@@ -21,6 +21,14 @@ public class Sale {
     @JoinColumn(name = "codigo_cliente", referencedColumnName = "codigo")
     private Customer customer;
 
+    public Sale() {
+    }
+
+    public Sale(LocalDate date, Customer customer) {
+        this.date = date;
+        this.customer = customer;
+    }
+
     public Long getId() {
         return id;
     }

@@ -3,6 +3,7 @@ package com.gvendas.gestao_vendas.services;
 import com.gvendas.gestao_vendas.entities.Product;
 import com.gvendas.gestao_vendas.exceptions.CategoryNotFoundException;
 import com.gvendas.gestao_vendas.exceptions.ProductDuplicateException;
+import com.gvendas.gestao_vendas.exceptions.ProductNotFoundException;
 import com.gvendas.gestao_vendas.exceptions.ResourceNotFoundException;
 import com.gvendas.gestao_vendas.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
@@ -56,7 +57,7 @@ public class ProductService {
     }
 
 
-    // TODO: Arrumar esse método
+    // TODO: Arrumar esse método - Talvez faltando Long idProduct nos parametros
     private void validatesIfProductCategoryExists(Long idCategory) {
         if(idCategory == null) {
             throw new CategoryNotFoundException("Category cannot be null");
@@ -66,6 +67,16 @@ public class ProductService {
             throw new CategoryNotFoundException(String.format("Code category %s does not exist", idCategory));
         }
     }
+
+
+    protected Product validatesIfProductExists(Long idProduct) {
+//        if(idProduct == null) {
+//            throw new CategoryNotFoundException("Category cannot be null");
+//        }
+        return productRepository.findById(idProduct).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    }
+
+
 
     private void validateDuplicateProduct(Product product) {
         Optional<Product> productByDescription = productRepository.findByCategoryIdAndDescription(product.getCategory().getId(), product.getDescription());
