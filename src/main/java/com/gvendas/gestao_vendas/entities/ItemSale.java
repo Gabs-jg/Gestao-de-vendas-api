@@ -38,6 +38,14 @@ public class ItemSale {
         this.sale = sale;
     }
 
+    public ItemSale(Long id, Integer quantity, BigDecimal sellingPrice, Product product, Sale sale) {
+        this.id = id;
+        this.quantity = quantity;
+        this.sellingPrice = sellingPrice;
+        this.product = product;
+        this.sale = sale;
+    }
+
     public Long getId() {
         return id;
     }

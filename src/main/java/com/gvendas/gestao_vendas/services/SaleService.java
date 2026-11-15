@@ -61,6 +61,7 @@ public class SaleService extends AbstractSaleService {
         return saleSave;
     }
 
+    // TODO: Erro 500 se informar id de produto inexistente
     private void validateProductExists(List<ItemSaleRequestDTO> itemSaleDTO) {
         itemSaleDTO.forEach(item -> productService.validatesIfProductExists(item.getIdProduct()));
     }
