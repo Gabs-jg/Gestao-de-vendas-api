@@ -8,11 +8,14 @@ import com.gvendas.gestao_vendas.entities.Customer;
 import com.gvendas.gestao_vendas.entities.ItemSale;
 import com.gvendas.gestao_vendas.entities.Product;
 import com.gvendas.gestao_vendas.entities.Sale;
+import com.gvendas.gestao_vendas.exceptions.QuantityProductAvaliableException;
 import com.gvendas.gestao_vendas.exceptions.SaleNotFoundException;
 import com.gvendas.gestao_vendas.repositories.ItemSaleRepository;
 import com.gvendas.gestao_vendas.repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,9 +50,11 @@ public class SaleService extends AbstractSaleService {
         return returnCustomerSaleResponseDTO(saleExists, itemSaleList);
     }
 
+    // TODO: Conferir Validações
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
     public CustomerSaleResponseDTO save(Long idCustomer, SaleRequestDTO saleDto) {
         Customer customer = validateCustomerSaleExists(idCustomer);
-        validateProductExists(saleDto.getItemSaleDTO());
+        validateProductExistsAndUpdateQuantity(saleDto.getItemSaleDTO());
         Sale saleSave = saveSale(customer, saleDto);
         List<ItemSale> itemSaleList = itemSaleRepository.findBySaleId(saleSave.getId());
         return returnCustomerSaleResponseDTO(saleSave, itemSaleList);
@@ -63,8 +68,20 @@ public class SaleService extends AbstractSaleService {
     }
 
     // TODO: Erro 500 se informar id de produto inexistente
-    private void validateProductExists(List<ItemSaleRequestDTO> itemSaleDTO) {
-        itemSaleDTO.forEach(item -> productService.validatesIfProductExists(item.getIdProduct()));
+    // TODO: Erro 500 se colocar quantidade maior do que em estoque
+    private void validateProductExistsAndUpdateQuantity(List<ItemSaleRequestDTO> itemSaleDTO) {
+        itemSaleDTO.forEach(item -> {
+            Product product = productService.validatesIfProductExists(item.getIdProduct());
+            validateQuantityProduct(product, item.getQuantity());
+            product.setQuantity(product.getQuantity() - item.getQuantity());
+            productService.updateQuantityAfterSale(product);
+        });
+    }
+
+    private void validateQuantityProduct(Product product, Integer quantitySaleDTO) {
+        if(!(product.getQuantity() >= quantitySaleDTO)) {
+            throw new QuantityProductAvaliableException(String.format("The quantity of %s requested for the product %s is not available in stock.", quantitySaleDTO, product.getDescription()));
+        }
     }
 
     private Sale validateSaleExists(Long idSale) {

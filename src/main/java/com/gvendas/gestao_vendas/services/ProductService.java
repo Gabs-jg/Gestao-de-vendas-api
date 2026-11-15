@@ -68,6 +68,9 @@ public class ProductService {
         }
     }
 
+    protected void updateQuantityAfterSale(Product product) {
+        productRepository.save(product);
+    }
 
     protected Product validatesIfProductExists(Long idProduct) {
 //        if(idProduct == null) {
